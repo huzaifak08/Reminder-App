@@ -72,7 +72,9 @@ class _HomePageState extends State<HomePage> {
                             title:
                                 Text(snapshot.child('title').value.toString()),
                             subtitle: Text(
-                                snapshot.child('description').value.toString()),
+                              snapshot.child('description').value.toString(),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             trailing: Text(
                                 snapshot.child('dateTime').value.toString()),
                           );
