@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1049977267074",
+    "firebase_url": "https://remind-me-d81ec-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "remind-me-d81ec",
+    "storage_bucket": "remind-me-d81ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049977267074:android:5f49166ea6675f449d659b",
+        "android_client_info": {
+          "package_name": "com.example.firebase_learn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049977267074-1bek8eke9h5lei9h6dmou2c5obraum5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEmxrWUaL8vBAyd4BXBvm5_KCmtcNyBps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049977267074-1bek8eke9h5lei9h6dmou2c5obraum5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
