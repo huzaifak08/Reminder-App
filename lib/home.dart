@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_learn/create_reminder.dart';
+import 'package:firebase_learn/edit_reminder.dart';
 import 'package:firebase_learn/firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('build');
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -68,16 +70,61 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         itemBuilder: (context, snapshot, animation, index) {
+                          String id = snapshot.child('id').value.toString();
+                          String title =
+                              snapshot.child('title').value.toString();
+                          String description =
+                              snapshot.child('description').value.toString();
                           return ListTile(
-                            title:
-                                Text(snapshot.child('title').value.toString()),
-                            subtitle: Text(
-                              snapshot.child('description').value.toString(),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Text(
-                                snapshot.child('dateTime').value.toString()),
-                          );
+                              title: Text(
+                                title,
+                              ),
+                              subtitle: Text(
+                                description,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              leading: CircleAvatar(
+                                child: Text('HK'),
+                                backgroundColor: Color(0xFFF2796B),
+                              ),
+                              trailing: PopupMenuButton(
+                                icon: Icon(Icons.more_vert),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: ListTile(
+                                      title: Text('Edit'),
+                                      leading: Icon(Icons.edit),
+                                      onTap: () {
+                                        // This will cancel the Dialog Box:
+                                        Navigator.pop(context);
+
+                                        // and will move to next page:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditReminderPage(
+                                                      id: id,
+                                                      oldTitle: title,
+                                                      OldDescription:
+                                                          description,
+                                                    )));
+                                      },
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: ListTile(
+                                      title: Text('Delete'),
+                                      leading: Icon(Icons.delete),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ));
                         },
                       ),
                     )
