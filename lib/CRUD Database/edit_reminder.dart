@@ -1,16 +1,25 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_learn/round_button.dart';
-import 'package:firebase_learn/utils.dart';
+import 'package:firebase_learn/CRUD%20Database/home.dart';
+import 'package:firebase_learn/Utils%20and%20Widgets/round_button.dart';
+import 'package:firebase_learn/Utils%20and%20Widgets/utils.dart';
 import 'package:flutter/material.dart';
 
-class CreateReminderPage extends StatefulWidget {
-  const CreateReminderPage({super.key});
+class EditReminderPage extends StatefulWidget {
+  String id;
+  String oldTitle;
+  String OldDescription;
+  EditReminderPage({
+    super.key,
+    required this.id,
+    required this.oldTitle,
+    required this.OldDescription,
+  });
 
   @override
-  State<CreateReminderPage> createState() => _CreateReminderPageState();
+  State<EditReminderPage> createState() => _EditReminderPageState();
 }
 
-class _CreateReminderPageState extends State<CreateReminderPage> {
+class _EditReminderPageState extends State<EditReminderPage> {
   DateTime dateTime = DateTime(2022, 09, 09, 3, 19);
 
   bool loading = false;
@@ -24,6 +33,14 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
   Widget build(BuildContext context) {
     final hours = dateTime.hour.toString().padLeft(2, '0');
     final minutes = dateTime.minute.toString().padLeft(2, '0');
+
+    // For moving old title and descriptions into Edit Page:
+    titleController.text = widget.oldTitle;
+    descriptionController.text = widget.OldDescription;
+
+    // loading:
+    bool loading = false;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -33,7 +50,7 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'CREATE REMINDER +',
+                  'EDIT REMINDER +',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -134,44 +151,55 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
                   ],
                 ),
                 SizedBox(height: 25),
-                RoundButton(
-                  title: 'Set Reminder',
-                  loading: loading,
-                  onTap: () {
-                    // Loading Status:
-                    setState(() {
-                      loading = true;
-                    });
+                Row(
+                  children: [
+                    Expanded(
+                      child: RoundButton(
+                        title: 'Cancel',
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => HomePage()));
 
-                    // Database Push Data:
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: RoundButton(
+                        title: 'Edit Reminder',
+                        onTap: () {
+                          setState(() {
+                            loading = true;
+                          });
+                          // Firebase Update Coding:
+                          databaseref.child(widget.id).update({
+                            'title': titleController.text.toString(),
+                            'description':
+                                descriptionController.text.toString(),
+                            'dateTime': dateTime.toString(),
+                          }).then((value) {
+                            setState(() {
+                              loading = false;
+                            });
 
-                    String id =
-                        DateTime.now().microsecondsSinceEpoch.toString();
+                            Utils()
+                                .toastMessage('Reminder Edited Successfully');
 
-                    databaseref.child(id).set({
-                      'id': id,
-                      'title': titleController.text.toString(),
-                      'description': descriptionController.text.toString(),
-                      'dateTime': dateTime.toString(),
-                    }).then((value) {
-                      // Loading Status:
+                            Navigator.pop(context);
+                          }).onError((error, stackTrace) {
+                            Utils().toastMessage(error.toString());
 
-                      setState(() {
-                        loading = false;
-                      });
-
-                      Utils().toastMessage('Reminder Created');
-
-                      Navigator.pop(context);
-                    }).onError((error, stackTrace) {
-                      // Loading Status:
-
-                      setState(() {
-                        loading = false;
-                      });
-                      Utils().toastMessage(error.toString());
-                    });
-                  },
+                            setState(() {
+                              loading = false;
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),

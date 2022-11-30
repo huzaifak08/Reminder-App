@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:firebase_learn/create_reminder.dart';
-import 'package:firebase_learn/edit_reminder.dart';
+import 'package:firebase_learn/CRUD%20Database/create_reminder.dart';
+import 'package:firebase_learn/CRUD%20Database/edit_reminder.dart';
 import 'package:firebase_learn/firebase_options.dart';
+import 'package:firebase_learn/authentication/login.dart';
+import 'package:firebase_learn/Utils%20and%20Widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -15,8 +18,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Firebase Auth:
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Firebase Realtime Database:
   final databaseRef = FirebaseDatabase.instance.ref('Post');
 
+  // Floating action button visibility:
   bool _showFab = true;
 
   @override
@@ -57,13 +65,12 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Image.asset(
                             'assets/bell.png',
                             height: 50,
                           ),
-                          SizedBox(width: 8),
                           Text(
                             'REMINDERS',
                             style: TextStyle(
@@ -73,6 +80,26 @@ class _HomePageState extends State<HomePage> {
                               color: Color(0xFFF2796B),
                             ),
                           ),
+
+                          // Log out Icon:
+                          IconButton(
+                            onPressed: () {
+                              _auth.signOut().then((value) {
+                                Utils().toastMessage('Logout Successfully');
+
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+                              }).onError((error, stackTrace) {
+                                Utils().toastMessage(error.toString());
+                              });
+                            },
+                            icon: Icon(
+                              Icons.logout_outlined,
+                              color: Color(0xFFF2796B),
+                            ),
+                          )
                         ],
                       ),
                       Expanded(

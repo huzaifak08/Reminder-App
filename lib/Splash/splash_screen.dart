@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase_learn/login.dart';
+import 'package:firebase_learn/Splash/splash_service.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,16 +11,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // Splash service object:
+  SplashService splashService = SplashService();
+  @override
+  void initState() {
+    super.initState();
+
+    // Going to Splash Service from here:
+    splashService.isLogin(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    Timer(
-      Duration(seconds: 6),
-      () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ));
-      },
-    );
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

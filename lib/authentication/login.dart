@@ -1,20 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_learn/authentication/login_with_phone.dart';
 import 'package:firebase_learn/firebase_options.dart';
-import 'package:firebase_learn/login.dart';
-import 'package:firebase_learn/round_button.dart';
-import 'package:firebase_learn/utils.dart';
+import 'package:firebase_learn/Utils%20and%20Widgets/round_button.dart';
+import 'package:firebase_learn/authentication/signup.dart';
+import 'package:firebase_learn/Utils%20and%20Widgets/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+import '../CRUD Database/home.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   // For not accepting null form:
   final _formKey = GlobalKey<FormState>();
 
@@ -44,7 +47,7 @@ class _SignupPageState extends State<SignupPage> {
                   Row(
                     children: [
                       Text(
-                        'Create Account',
+                        'Login',
                         style: TextStyle(
                           height: 2,
                           fontSize: 23,
@@ -99,7 +102,7 @@ class _SignupPageState extends State<SignupPage> {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Enter your Email';
+                        return "Enter your Email";
                       } else
                         null;
                     },
@@ -126,43 +129,67 @@ class _SignupPageState extends State<SignupPage> {
                     obscureText: true,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Enter your Password';
+                        return "Enter your Password";
                       } else
                         null;
                     },
                   ),
                   SizedBox(height: 25),
                   RoundButton(
-                    title: 'Sign UP',
+                    title: 'Sign In',
                     loading: loading,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        signUp();
+                        signIn();
                       }
+                    },
+                  ),
+                  SizedBox(height: 25),
+
+                  // Login With Phone Number:
+                  InkWell(
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFFF2796B), width: 2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                          child: Text(
+                        'Login With Phone Number',
+                        style: TextStyle(color: Color(0xFFF2796B)),
+                      )),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginWithPhoneScreen()));
                     },
                   ),
                   SizedBox(height: 12),
 
-                  // Already have an Account?
+                  // Don't have an account?
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Already have an account? ',
+                        "Don't have an account? ",
                         style: TextStyle(color: Colors.grey),
                       ),
                       TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => LoginPage(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Login In',
-                            style: TextStyle(color: Color(0xFFF2796B)),
-                          ))
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => SignupPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Sign UP',
+                          style: TextStyle(color: Color(0xFFF2796B)),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -174,12 +201,12 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  void signUp() {
+  void signIn() {
     setState(() {
       loading = true;
     });
     _auth
-        .createUserWithEmailAndPassword(
+        .signInWithEmailAndPassword(
       email: _emailController.text.toString(),
       password: _passwordController.text.toString(),
     )
@@ -187,11 +214,16 @@ class _SignupPageState extends State<SignupPage> {
       setState(() {
         loading = false;
       });
-      Utils().toastMessage('Account Created Successfully');
+
+      Utils().toastMessage(value.user!.email.toString());
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     }).onError((error, stackTrace) {
       setState(() {
         loading = false;
       });
+
       Utils().toastMessage(error.toString());
     });
   }
