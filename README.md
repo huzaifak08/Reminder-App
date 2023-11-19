@@ -1,10 +1,11 @@
-# reminder_app
+# Reminder APP
 
-A new Flutter project.
+A new Flutter and Firebase Project which helps the user to Remind his/her important tasks.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
+## Tools and Technology
+Flutter
+Firebase
+CI/CD
 
 A few resources to get you started if this is your first Flutter project:
 
