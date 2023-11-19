@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "334484730380",
+    "project_id": "reminder-app-08",
+    "storage_bucket": "reminder-app-08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334484730380:android:c1bfdf45c668bbcd1fb429",
+        "android_client_info": {
+          "package_name": "com.huzaifa.reminder_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdoZdgaZn5x7_KJBXCZ-n4RclTGBYUWdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
