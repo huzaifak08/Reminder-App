@@ -11,15 +11,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        // home: const SplashScreen(),
+        initialRoute: RouteName.splashScreen,
+        onGenerateRoute: Routes.generateRoute,
       ),
-      // home: const SplashScreen(),
-      initialRoute: RouteName.splashScreen,
-      onGenerateRoute: Routes.generateRoute,
     );
   }
 }

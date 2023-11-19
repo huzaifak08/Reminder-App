@@ -1,7 +1,3 @@
-import 'package:reminder_app/Constants/responsive.dart';
-import 'package:reminder_app/Widgets/Design/auth_header.dart';
-import 'package:reminder_app/Widgets/Design/input_text_field.dart';
-
 import '../libraries.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
 
   late final FocusNode _passwordFocusNode;
 
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -39,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -116,8 +113,12 @@ class _LoginPageState extends State<LoginPage> {
                     width: getWidth(context, 1.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, RouteName.homeScreen);
+                        if (_formKey.currentState!.validate()) {
+                          authProvider.signInUser(
+                              _emailController.text, _passwordController.text);
+                          Navigator.pushReplacementNamed(
+                              context, RouteName.homeScreen);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),

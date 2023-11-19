@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -53,9 +54,8 @@ class _HomePageState extends State<HomePage> {
                             color: AppColors.primaryColor,
                             size: 30,
                           ),
-                          onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                RouteName.loginScreen, (route) => false);
+                          onPressed: () async {
+                            await authProvider.signOutUser(context);
                           },
                         )
                       ],
