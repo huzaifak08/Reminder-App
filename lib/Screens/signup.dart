@@ -1,3 +1,7 @@
+import 'package:reminder_app/Constants/responsive.dart';
+import 'package:reminder_app/Widgets/Design/auth_header.dart';
+import 'package:reminder_app/Widgets/Design/input_text_field.dart';
+
 import '../libraries.dart';
 
 class SignupPage extends StatefulWidget {
@@ -8,20 +12,26 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+  late final FocusNode _passwordFocusNode;
 
   @override
   void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+
+    _passwordFocusNode = FocusNode();
     super.initState();
   }
 
   @override
   void dispose() {
-    _email.dispose();
-    _password.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -31,93 +41,74 @@ class _SignupPageState extends State<SignupPage> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+            padding: EdgeInsets.symmetric(
+                horizontal: getWidth(context, 0.02),
+                vertical: getHeight(context, 0.01)),
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // SizedBox(height: 12),
-                Row(
-                  children: [
-                    const Text(
-                      'Create Account',
-                      style: TextStyle(
-                        height: 2,
-                        fontSize: 23,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Image.asset(
-                        'assets/images/User.png',
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  ],
-                ),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Make your life easier with us',
-                    style: TextStyle(color: Color(0xFF5B5B5B)),
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35.0),
-                  child: SizedBox(
-                    height: 231,
-                    width: 296,
-                    child: Image.asset('assets/images/login_img.png'),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                const Text(
-                  'Enter your Email Address',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 17,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _email,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    hintText: 'someone@gmail.com',
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 15),
-                const Text(
-                  'Enter your Password',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 17,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _password,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    hintText: "abc123",
-                  ),
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
-                ),
-                const SizedBox(height: 25),
+                const AuthHeader(title: 'Create Account'),
+                SizedBox(height: getHeight(context, 0.01)),
                 SizedBox(
-                  height: 43,
-                  width: 367,
+                  height: getHeight(context, 0.35),
+                  width: getWidth(context, 1.0),
+                  child: Image.asset('assets/images/login_img.png'),
+                ),
+                SizedBox(height: getHeight(context, 0.02)),
+                const Text(
+                  'Email Address',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17,
+                  ),
+                ),
+                SizedBox(height: getHeight(context, 0.012)),
+                InputTextField(
+                  myController: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  hint: 'someone@gmail.com',
+                  obsecureText: false,
+                  onFiledSubmissionValue: (newValue) {
+                    if (newValue != null) {
+                      // _passwordFocusNode.requestFocus();
+                    }
+                  },
+                  onValidator: (value) {
+                    return RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(value)
+                        ? null
+                        : 'Enter a valid Email Address';
+                  },
+                ),
+                SizedBox(height: getHeight(context, 0.012)),
+                const Text(
+                  'Password',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17,
+                  ),
+                ),
+                SizedBox(height: getHeight(context, 0.012)),
+                InputTextField(
+                  myController: _passwordController,
+                  keyboardType: TextInputType.emailAddress,
+                  hint: 'abc@123',
+                  obsecureText: true,
+                  focusNode: _passwordFocusNode,
+                  onValidator: (value) {
+                    if (value!.isEmpty && value!.length < 6) {
+                      return "Password Can't be less than 6 characters";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: getHeight(context, 0.012)),
+                SizedBox(
+                  height: getHeight(context, 0.05),
+                  width: getWidth(context, 1.0),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushReplacementNamed(
@@ -126,10 +117,10 @@ class _SignupPageState extends State<SignupPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                     ),
-                    child: const Text('Sign UP'),
+                    child: const Text('Continue'),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: getHeight(context, 0.015)),
                 RichText(
                   text: TextSpan(
                     style: const TextStyle(color: Colors.grey),
